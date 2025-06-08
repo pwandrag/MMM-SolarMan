@@ -15,14 +15,14 @@ Module.register("MMM-SolarMan",{
 		width: 500,
 		height: 400,
 		stationID: 62052809,	  
-		token : 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiIwX3BhdWxAd2FuZHJhZy5jby56YV8yIiwibW9kaWZ5X3Bhc3N3b3JkIjoxLCJzY29wZSI6WyJhbGwiXSwiZGV0YWlsIjp7Im9yZ2FuaXphdGlvbklkIjowLCJ0b3BHcm91cElkIjpudWxsLCJncm91cElkIjpudWxsLCJyb2xlSWQiOi0xLCJ1c2VySWQiOjEzNzA2MTQzLCJ2ZXJzaW9uIjoxMDAwLCJpZGVudGlmaWVyIjoicGF1bEB3YW5kcmFnLmNvLnphIiwiaWRlbnRpdHlUeXBlIjoyLCJtZGMiOiJGT1JFSUdOXzEiLCJhcHBJZCI6bnVsbH0sImV4cCI6MTc1Mzg5MTY2MiwibWRjIjoiRk9SRUlHTl8xIiwiYXV0aG9yaXRpZXMiOlsiYWxsIl0sImp0aSI6IjAwODFmOTJkLWI1YjAtNGZmMS04ZDE2LWIzOWMyNWJiZjViZiIsImNsaWVudF9pZCI6InRlc3QifQ.gue7RcXKvO64mzE8qBUxdQYRdJoFTw1QfyAJB3oax9IZy88UJnxQMZnpGRjZTg56oBGs8TGpSSz7onWlgHCTcVZfVfeEmuYnRMJYEeNBxDjVJz6U0K2z-bqfsKTFtlixqW4Z094ML-2KplojGhbRAniQhgWSFLmXRvsSnchXVQTl2JyhObJte6fQQ1ms9hgcnK5bVemBcT0futicTuNvBWPrkal0Fmze24F3PikfrS9zM6kJ8r_lni-DT3Au4n0WhkdIm4ed_Ce5dCXB_FqBsUVuKphKLljydfL84lhc_BcyxW2QCRZfN3nCvUW-Dw2x1JSG3QHn9KnVlPu_5PX_rg',  //Required!
+		token : ''
 	},
 
   
 	// Define required scripts. Chart.js needed for the graph.
 	getScripts: function() {
 	  return [
-		'modules/MMM-SolarMan/node_modules/chart.js/dist/Chart.js',
+		'modules/MMM-SolarMan/node_modules/chart.js/dist/chart.js',
 		'moment.js'
 	  ];
 	},

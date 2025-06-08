@@ -4,7 +4,7 @@ Display your SolarMan PV Solar Panel Inverter output
 
 | Status | Version | Date | 
 |:------- |:------- |:---- |
-| Beta | 1.0.0 | 2025-06-08 |
+| Working | 1.0.1 | 2025-06-08 |
 
 #### What is this module doing?
 
