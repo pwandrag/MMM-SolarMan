@@ -46,7 +46,7 @@ Module.register("MMM-SolarMan",{
       moment.locale(config.language);
 
 	  this.payload = false;
-	  refresh = (this.config.updateInterval <= 900 ? 900 : this.config.updateInterval) * 1000;
+	  refresh = (this.config.updateIntervalSeconds) * 1000;
 	  this.sendSocketNotification("START_SOLARMAN", {
 		updateInterval: refresh,
 		stationID: this.config.stationID,
