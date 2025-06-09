@@ -95,6 +95,7 @@ Module.register("MMM-SolarMan",{
 		let headerText = document.createElement("p");
 		headerText.innerHTML = this.translate("Solar");
 		headerText.style = "margin: 0px 0px 0px 15px;";
+		headerText.className = "light small";
 
 		let headerIcon = document.createElement("i");
 		headerIcon.className = "fas fa-fw fa-solar-panel";
@@ -256,8 +257,8 @@ Module.register("MMM-SolarMan",{
 						data: data.map(row => row.soc),
 						fill: false,
 						borderWidth: 2,
-						borderColor: 'rgb(255,0,255)',
-						backgroundColor: 'rgb(255,0,255)',
+						borderColor: '#4caf50',
+						backgroundColor: '#4caf50',
 						yAxisID: 'y2',
 						pointStyle : false
 					},
@@ -267,8 +268,8 @@ Module.register("MMM-SolarMan",{
 						data: data.map(row => row.grid),
 						fill: false,
 						borderWidth: 2,
-						borderColor: 'rgb(255,0,0)',
-						backgroundColor: 'rgb(255,0,0)',
+						borderColor: 'rgba(255, 0, 0, 0.87)',
+						backgroundColor: 'rgba(255, 0, 0, 0.87)',
 						yAxisID: 'y'
 					},
 					{
@@ -276,8 +277,8 @@ Module.register("MMM-SolarMan",{
 						label: 'Load',
 						data: data.map(row => row.load),
 						fill: true,
-						borderColor: 'rgb(0,255,0)',
-						backgroundColor: 'rgb(0,255,0)',
+						borderColor: 'rgb(116, 74, 116)',
+						backgroundColor: 'rgb(116, 74, 116)',
 						yAxisID: 'y',
 						borderWidth: 2,
 						minBarLength: 2,
@@ -290,8 +291,8 @@ Module.register("MMM-SolarMan",{
 						data: data.map(row => row.generationPower),
 						fill: false,
 						borderWidth: 2,
-						borderColor: 'rgb(0,0,255)',
-						backgroundColor: 'rgb(0,0,255)',
+						borderColor: 'rgb(101, 101, 233)',
+						backgroundColor: 'rgb(101, 101, 233)',
 						yAxisID: 'y'
 					}         
 				]

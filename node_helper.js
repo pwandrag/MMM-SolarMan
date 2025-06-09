@@ -36,9 +36,10 @@ let SolarMan = async function(opts,source) {
 		//https://globalhome.solarmanpv.com/maintain-s/history/batteryPower/62052809/stats/daily?year=2025&month=6&day=8
 		let today = new Date();
 		let year = today.getFullYear();
-		let month =today.getMonth();
+		let month =today.getMonth()+1; // Months are zero-based, so we add 1
 		let day = today.getDate();
 		 dataUrl = `https://globalhome.solarmanpv.com/maintain-s/history/batteryPower/${opts.stationID}/stats/daily?year=${year}&month=${month}&day=${day}`;
+
 	}
 		
 	let response = await fetch(dataUrl,
@@ -50,7 +51,7 @@ let SolarMan = async function(opts,source) {
 
 	if (!response.ok) {
 		console.error(`Error url:${dataUrl} status:${response.statusText} body: ${response.text()}`);
-		return null;;
+		return null;
 	} 	 
 
 
