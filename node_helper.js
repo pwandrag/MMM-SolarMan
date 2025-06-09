@@ -109,7 +109,7 @@ module.exports = NodeHelper.create({
 		if (notification === "START_SOLARMAN" && this.started == false) {				
 			console.log("SocketNotification START_SOLARMAN received for the first time...setting updateInterval to " + payload.updateInterval + "ms");
 			self.processData(payload); // When the MagicMirror module is called the first time, we are immediatly going to fetch data
-   			setInterval(function() { processData(payload) }, payload.updateInterval); // Now let's schedule the job
+   			setInterval(function() { self.processData(payload) }, payload.updateInterval); // Now let's schedule the job
 			self.started = true;
 		} else if (notification === "START_SOLARMAN" && this.started == true) {
 			console.log("SocketNotification START_SOLARMAN received");
