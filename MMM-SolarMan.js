@@ -11,7 +11,7 @@
 Module.register("MMM-SolarMan",{
 	// Default module config.
 	defaults: {	  
-		updateInterval: 900,
+		updateIntervalSeconds: 120, // Update interval in seconds
 		width: 500,
 		height: 400,
 		stationID: 62052809,	  
@@ -55,7 +55,7 @@ Module.register("MMM-SolarMan",{
 	},
 
 	socketNotificationReceived: function(notification, payload) {
-	  var msgStats = document.getElementById("solarmanStats");
+	  let msgStats = document.getElementById("solarmanStats");
 
 	  // was not able to receive data
 	  if (notification == "ERROR") {
@@ -86,35 +86,35 @@ Module.register("MMM-SolarMan",{
 	getDom: function() {
 		
 		// Build the table
-		var container = document.createElement("div");
+		let container = document.createElement("div");
 
 		container.className = "solarmanContainer";
 		container.style.width = this.config.width + "px";
 
-		var headerDiv = document.createElement("div");
-		var headerText = document.createElement("p");
+		let headerDiv = document.createElement("div");
+		let headerText = document.createElement("p");
 		headerText.innerHTML = this.translate("Solar");
 		headerText.style = "margin: 0px 0px 0px 15px;";
 
-		var headerIcon = document.createElement("i");
+		let headerIcon = document.createElement("i");
 		headerIcon.className = "fas fa-fw fa-solar-panel";
 
 		headerDiv.appendChild(headerIcon);
 		headerDiv.appendChild(headerText);
 
-		var divider = document.createElement("hr");
+		let divider = document.createElement("hr");
 		divider.className = "dimmed";
 
-		var graphDiv = document.createElement("div");
+		let graphDiv = document.createElement("div");
 		graphDiv.className = "small thin light";
 		graphDiv.style.width = this.config.width + "px";
 		graphDiv.style.height = (this.config.height-30) /2  + "px";
 		graphDiv.style.display = "table-cell";
-		var graph = document.createElement("canvas");
+		let graph = document.createElement("canvas");
 		graph.id = "solarmanGraph";
 		graphDiv.appendChild(graph);
 
-		var msg = document.createElement("div");
+		let msg = document.createElement("div");
 		msg.className = "small bright";
 		msg.style.width = this.config.width + "px";
 		msg.style.height = (this.config.height-30)/2 + "px";
@@ -135,17 +135,17 @@ Module.register("MMM-SolarMan",{
 		console.log(JSON.stringify(data));
 
 
-		var container = document.getElementById("solarmanStats");
+		let container = document.getElementById("solarmanStats");
 		container.style.display = "block";
 		container.innerHTML = ""; // Clear previous content
 
 		//create two column table
-		var table = document.createElement("table");
+		let table = document.createElement("table");
 		table.className = "small thin light";
 		table.style.width = this.config.width + "px";
 		table.id = "solarmanStatsTable";
 
-		var row = document.createElement("tr");
+		let row = document.createElement("tr");
 		row.innerHTML = `<td class='small regular bright'>System</td><td class='small light bright'>${data.status}</td>`;
 		table.appendChild(row);
 		row = document.createElement("tr");

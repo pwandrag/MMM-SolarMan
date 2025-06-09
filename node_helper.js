@@ -8,7 +8,7 @@
  */
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
-var NodeHelper = require('node_helper');
+let NodeHelper = require('node_helper');
 
 
 /**
@@ -17,7 +17,7 @@ var NodeHelper = require('node_helper');
  * @module
  * @param {Object} opts  Need to pass a stationID, token.
  */
-var SolarMan = async function(opts,source) {
+let SolarMan = async function(opts,source) {
 
 	if(!opts.token) {
 		throw new Error('token');
@@ -26,22 +26,22 @@ var SolarMan = async function(opts,source) {
 		throw new Error('stationID Must Be Defined');
 	}
 
-	var dataUrl = "";
-	const token = opts.token;
+	let dataUrl = "";
+	let token = opts.token;
 	if (source === "system") {
 		//https://globalhome.solarmanpv.com/maintain-s/operating/system/62052809
 		dataUrl = `https://globalhome.solarmanpv.com/maintain-s/operating/system/${opts.stationID}`;
 	}
 	else {
 		//https://globalhome.solarmanpv.com/maintain-s/history/batteryPower/62052809/stats/daily?year=2025&month=6&day=8
-		var today = new Date();
-		var year = today.getFullYear();
-		var month =today.getMonth();
-		var day = today.getDate();
+		let today = new Date();
+		let year = today.getFullYear();
+		let month =today.getMonth();
+		let day = today.getDate();
 		 dataUrl = `https://globalhome.solarmanpv.com/maintain-s/history/batteryPower/${opts.stationID}/stats/daily?year=${year}&month=${month}&day=${day}`;
 	}
 		
-	const response = await fetch(dataUrl,
+	let response = await fetch(dataUrl,
 		{ headers: { 
 			Authorization: `Bearer ${token}`, 
 			UserAgent:'MagicMirror' } 
@@ -55,7 +55,7 @@ var SolarMan = async function(opts,source) {
 
 
 	if (source === "system") {
-		const json = await response.json();
+		let json = await response.json();
 		this.stats = json;
 		return {
 				status: this.stats.consumerWarningStatus,
@@ -68,9 +68,9 @@ var SolarMan = async function(opts,source) {
 			};
 	}
 	else {
-		const json = await response.json();
-		const records = json.records;
-		const chartData = [];
+		let json = await response.json();
+		let records = json.records;
+		let chartData = [];
 		
 		records.forEach(row => {
 			chartData.push({   
@@ -121,13 +121,13 @@ module.exports = NodeHelper.create({
 		var self = this;
 		
 		// Send all to script
-		const pv = await SolarMan(payload,"system");
+		let pv = await SolarMan(payload,"system");
 		self.sendSocketNotification('SOLARMAN_DAY_SUMMARY', {
 			payload: payload,
 			data: pv
 		});
 	
-		const pv2 = await SolarMan(payload,"detail");
+		let pv2 = await SolarMan(payload,"detail");
 		self.sendSocketNotification('SOLARMAN_DAY_DETAIL',{
 			payload: payload,
 			data: pv2
