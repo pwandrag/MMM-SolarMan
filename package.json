@@ -1,6 +1,6 @@
 {
   "name": "mmm-solarman",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Display your SolarMan PV output. Clone from MMM-SunnyPortal and modify for SolarMan.",
   "main": "MMM-SolarMan.js",
   "scripts": {

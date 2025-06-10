@@ -39,7 +39,7 @@ let SolarMan = async function(opts,source) {
 		let month =today.getMonth()+1; // Months are zero-based, so we add 1
 		let day = today.getDate();
 		 dataUrl = `https://globalhome.solarmanpv.com/maintain-s/history/batteryPower/${opts.stationID}/stats/daily?year=${year}&month=${month}&day=${day}`;
-
+		console.debug(`SolarMan dataUrl: ${dataUrl}`);
 	}
 		
 	let response = await fetch(dataUrl,
@@ -109,7 +109,7 @@ module.exports = NodeHelper.create({
 		if (notification === "START_SOLARMAN" && this.started == false) {				
 			console.log("SocketNotification START_SOLARMAN received for the first time...setting updateInterval to " + payload.updateInterval + "ms");
 			self.processData(payload); // When the MagicMirror module is called the first time, we are immediatly going to fetch data
-   			setInterval(function() { self.processData(payload) }, payload.updateInterval); // Now let's schedule the job
+   			setInterval( async function() { await self.processData(payload) }, payload.updateInterval); // Now let's schedule the job
 			self.started = true;
 		} else if (notification === "START_SOLARMAN" && this.started == true) {
 			console.log("SocketNotification START_SOLARMAN received");
@@ -129,7 +129,7 @@ module.exports = NodeHelper.create({
 		});
 	
 		let pv2 = await SolarMan(payload,"detail");
-		self.sendSocketNotification('SOLARMAN_DAY_DETAIL',{
+		self.sendSocketNotification('SOLARMAN_DAY_DETAIL', {
 			payload: payload,
 			data: pv2
 		});

@@ -132,8 +132,8 @@ Module.register("MMM-SolarMan",{
 	},
   
 	drawSummaryTable:  function(data){
-		console.log("Going to draw summary table: ");
-		console.log(JSON.stringify(data));
+		//console.log("Going to draw summary table: ");
+		//console.log(JSON.stringify(data));
 
 
 		let container = document.getElementById("solarmanStats");
@@ -177,12 +177,18 @@ Module.register("MMM-SolarMan",{
 	* For config options visit https://www.chartjs.org/docs/latest/
 	*/
 	drawDayChart: function(data) {
-		console.log("Going to draw Month chart with the following data: ");
-		console.log(JSON.stringify(data));
+		//console.log("Going to draw Month chart with the following data: ");
+		//console.log(JSON.stringify(data));
 
 		var container = document.getElementById("solarmanGraph");
 		var ctx = container.getContext("2d");
-		var c = new Chart(ctx,
+
+		// Clear previous chart if it exists
+		if (this.c) {
+			this.c.destroy();
+		}
+
+		this.c = new Chart(ctx,
 		{
 			type: 'line',
 			options:{
