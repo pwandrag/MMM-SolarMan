@@ -147,7 +147,7 @@ Module.register("MMM-SolarMan",{
 		table.id = "solarmanStatsTable";
 
 		let row = document.createElement("tr");
-		row.innerHTML = `<td class='small regular bright'>System</td><td class='small light bright'>${data.status}</td>`;
+		row.innerHTML = `<td class='small regular bright'>System</td><td class='small light bright'>${data.status} <span class='normal xsmall' style='float:right'>Token:${new Date(data.tokenExpiration).toLocaleDateString('en-us',[{day:'numeric'},{month:'short'},{year:'none'}])})</span></td>`;
 		table.appendChild(row);
 		row = document.createElement("tr");
 		row.innerHTML = `<td class='small regular bright'>Load</td><td class='small light bright'>${data.load} W</td>`;

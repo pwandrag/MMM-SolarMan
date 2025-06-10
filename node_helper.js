@@ -56,6 +56,16 @@ let SolarMan = async function(opts,source) {
 
 
 	if (source === "system") {
+		// split the token, take the second part, which is the actual token
+		let tokenParts = token.split('.');
+		let tokenPart = tokenParts[1];
+		// decode the token part
+		let decodedToken = Buffer.from(tokenPart, 'base64').toString('utf8');
+		// parse the decoded token as JSON
+		let parsedToken = JSON.parse(decodedToken);
+		// get expiration time from the token
+		let expirationTime = parsedToken.exp * 1000; // convert to milliseconds
+
 		let json = await response.json();
 		this.stats = json;
 		return {
@@ -65,7 +75,8 @@ let SolarMan = async function(opts,source) {
 				battery: this.stats.dischargePower,
 				grid: this.stats.wirePower,
 				batteryStatus: this.stats.batteryStatus,
-				soc: this.stats.batterySoc
+				soc: this.stats.batterySoc,
+				tokenExpiration: expirationTime,
 			};
 	}
 	else {
