@@ -286,14 +286,14 @@ Module.register("MMM-SolarMan",{
 						yAxisID: 'y'
 					},
 					{
-						type:'bar',
+						type:'line',
 						label: 'Load',
 						data: data.map(row => row.load),
 						fill: true,
+						borderWidth: 2,
 						borderColor: 'rgb(116, 74, 116)',
 						backgroundColor: 'rgb(116, 74, 116)',
 						yAxisID: 'y',
-						borderWidth: 2,
 						minBarLength: 2,
 						//barThickness: 10,
 						//borderRadius: 5,
