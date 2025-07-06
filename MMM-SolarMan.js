@@ -197,10 +197,6 @@ Module.register("MMM-SolarMan",{
 						pointStyle:false,
 						radius: 0,
 					},
-					line:{
-						cubicInterpolationMode:'default',
-						borderWidth:0,
-					},
 					legend:{
 						display: true,
 						position: 'bottom',
@@ -209,7 +205,9 @@ Module.register("MMM-SolarMan",{
 							boxWidth: 20,
 						}
 					},
-					
+					line: {
+						tension: 0.4, // Smooth lines
+					}
 				},
 				scales: {
 					x:{
@@ -270,19 +268,19 @@ Module.register("MMM-SolarMan",{
 						data: data.map(row => row.soc),
 						fill: false,
 						borderWidth: 2,
-						borderColor: '#4caf50',
-						backgroundColor: '#4caf50',
+						borderColor: 'rgba(75, 236, 144, 1)',
+						backgroundColor: 'rgba(75, 236, 144, 0.20)',
 						yAxisID: 'y2',
-						pointStyle : false
+						pointStyle : false,
 					},
 					{
 						type: 'line',
 						label: 'Grid',
 						data: data.map(row => row.grid),
-						fill: false,
+						fill: true,
 						borderWidth: 2,
-						borderColor: 'rgba(255, 0, 0, 0.87)',
-						backgroundColor: 'rgba(255, 0, 0, 0.87)',
+						borderColor: 'rgba(236, 225, 75, 1)',
+						backgroundColor: 'rgba(236, 225, 75, 0.20)',
 						yAxisID: 'y'
 					},
 					{
@@ -291,21 +289,18 @@ Module.register("MMM-SolarMan",{
 						data: data.map(row => row.load),
 						fill: true,
 						borderWidth: 2,
-						borderColor: 'rgb(116, 74, 116)',
-						backgroundColor: 'rgb(116, 74, 116)',
-						yAxisID: 'y',
-						minBarLength: 2,
-						//barThickness: 10,
-						//borderRadius: 5,
+						borderColor: 'rgb(236, 75, 167)',
+						backgroundColor: 'rgb(236, 75, 167,0.20)',
+						yAxisID: 'y'
 					},
 					{
 						type: 'line',
 						label: 'Generation',
 						data: data.map(row => row.generationPower),
-						fill: false,
+						fill: true,
 						borderWidth: 2,
-						borderColor: 'rgb(101, 101, 233)',
-						backgroundColor: 'rgb(101, 101, 233)',
+						borderColor: 'rgb(75, 86, 236)',
+						backgroundColor: 'rgb(75, 86, 236,0.20)',
 						yAxisID: 'y'
 					}         
 				]
