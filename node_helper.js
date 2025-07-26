@@ -28,18 +28,19 @@ let SolarMan = async function(opts,source) {
 
 	let dataUrl = "";
 	let token = opts.token;
+	let today = new Date();
+	let year = today.getFullYear();
+	let month =today.getMonth()+1; // Months are zero-based, so we add 1
+	let day = today.getDate();
 	if (source === "system") {
-		//https://globalhome.solarmanpv.com/maintain-s/operating/system/62052809
 		dataUrl = `https://globalhome.solarmanpv.com/maintain-s/operating/system/${opts.stationID}`;
 	}
-	else {
-		//https://globalhome.solarmanpv.com/maintain-s/history/batteryPower/62052809/stats/daily?year=2025&month=6&day=8
-		let today = new Date();
-		let year = today.getFullYear();
-		let month =today.getMonth()+1; // Months are zero-based, so we add 1
-		let day = today.getDate();
+	else if (source === "detail") {
 		 dataUrl = `https://globalhome.solarmanpv.com/maintain-s/history/batteryPower/${opts.stationID}/stats/daily?year=${year}&month=${month}&day=${day}`;
 		console.debug(`SolarMan dataUrl: ${dataUrl}`);
+	} else {
+		// daily data
+		dataUrl = `https://globalhome.solarmanpv.com/maintain-s/history/power/analysis/${opts.stationID}/day?year=${year}&month=${month}&day=${day}`;
 	}
 		
 	let response = await fetch(dataUrl,
@@ -79,7 +80,7 @@ let SolarMan = async function(opts,source) {
 				tokenExpiration: expirationTime,
 			};
 	}
-	else {
+	else if (source === "detail") {
 		let json = await response.json();
 		let records = json.records;
 		let chartData = [];
@@ -97,6 +98,16 @@ let SolarMan = async function(opts,source) {
 		});
 	
 		return chartData
+	} else {
+		let json = await response.json();
+		this.statsDay = json;
+	
+		return {
+				generationPowerToday: this.statsDay.gvForUse,
+				loadToday: this.statsDay.useValue,
+				batteryPowerToday: this.statsDay.uvFromDischarge,
+				gridPowerToday: this.statsDay.uvFromBuy
+		};
 	}
 };
 
@@ -134,9 +145,14 @@ module.exports = NodeHelper.create({
 		
 		// Send all to script
 		let pv = await SolarMan(payload,"system");
+		let pvTotal = await SolarMan(payload,"day");
+		
 		self.sendSocketNotification('SOLARMAN_DAY_SUMMARY', {
 			payload: payload,
-			data: pv
+			data: {
+				instantaneous: pv,
+				today: pvTotal
+			}
 		});
 	
 		let pv2 = await SolarMan(payload,"detail");
