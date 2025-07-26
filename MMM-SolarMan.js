@@ -147,19 +147,19 @@ Module.register("MMM-SolarMan",{
 		table.id = "solarmanStatsTable";
 
 		let row = document.createElement("tr");
-		row.innerHTML = `<td class='small regular bright'>System</td><td class='small light bright'>${data.instantaneous.status}</td><td><span class='normal xsmall' style='float:right'>Token:${new Date(data.tokenExpiration).toLocaleDateString('en-us',[{day:'numeric'},{month:'short'},{year:'none'}])}</span></td>`;
+		row.innerHTML = `<td class='small regular bright'>System</td><td class='small light bright'>${data.instantaneous.status}</td><td><span class='normal xsmall' style='float:right'>Token:${new Date(data.instantaneous.tokenExpiration).toLocaleDateString('en-us',[{day:'numeric'},{month:'short'},{year:'none'}])}</span></td>`;
 		table.appendChild(row);
 		row = document.createElement("tr");
-		row.innerHTML = `<td class='small regular bright'>Load</td><td class='small light bright'>${data.instantaneous.load} W</td><td class='small light'>${data.today.loadToday} W</td>`;
+		row.innerHTML = `<td class='small regular bright'>Load</td><td class='small light bright'>${data.instantaneous.load} W</td><td class='normal small light'>${data.today.loadToday} KW</td>`;
 		table.appendChild(row);
 		row = document.createElement("tr");
-		row.innerHTML = `<td class='small regular bright'>Generating</td><td class='small light bright'>${data.instantaneous.generating} W</td><td class='small light'>${data.today.generationPowerToday} W</td>`;
+		row.innerHTML = `<td class='small regular bright'>Generating</td><td class='small light bright'>${data.instantaneous.generating} W</td><td class='normal small light'>${data.today.generationPowerToday} KW</td>`;
 		table.appendChild(row);
 		row = document.createElement("tr");
-		row.innerHTML = `<td class='small regular bright'>Battery</td><td class='small light bright'>${data.instantaneous.battery} W</td><td class='small light'>${data.today.batteryPowerToday} W</td>`;
+		row.innerHTML = `<td class='small regular bright'>Battery</td><td class='small light bright'>${data.instantaneous.battery} W</td><td class='normal small light'>${data.today.batteryPowerToday} KW</td>`;
 		table.appendChild(row);
 		row = document.createElement("tr");
-		row.innerHTML = `<td class='small regular bright'>Grid</td><td class='small light bright'>${data.instantaneous.grid} W</td><td class='small light'>${data.today.gridPowerToday} W</td>`;
+		row.innerHTML = `<td class='small regular bright'>Grid</td><td class='small light bright'>${data.instantaneous.grid} W</td><td class='normal small light'>${data.today.gridPowerToday} KW</td>`;
 		table.appendChild(row);
 		row = document.createElement("tr");
 		row.innerHTML = `<td class='small regular bright'>Battery Status</td><td class='small light bright'>${data.instantaneous.batteryStatus}</td><td></td>`;

@@ -103,10 +103,10 @@ let SolarMan = async function(opts,source) {
 		this.statsDay = json;
 	
 		return {
-				generationPowerToday: this.statsDay.gvForUse,
-				loadToday: this.statsDay.useValue,
-				batteryPowerToday: this.statsDay.uvFromDischarge,
-				gridPowerToday: this.statsDay.uvFromBuy
+				generationPowerToday: this.statsDay.gvForUse.toFixed(2),
+				loadToday: this.statsDay.useValue.toFixed(2),
+				batteryPowerToday: this.statsDay.uvFromDischarge.toFixed(2),
+				gridPowerToday: this.statsDay.uvFromBuy.toFixed(2)
 		};
 	}
 };
