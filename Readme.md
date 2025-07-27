@@ -4,17 +4,21 @@ Display your SolarMan PV Solar Panel Inverter output
 
 | Status | Version | Date | 
 |:------- |:------- |:---- |
-| Working | 1.0.1 | 2025-06-08 |
+| Working | 1.0.4 | 2025-07-27 |
 
 #### What is this module doing?
 
 *MMM-SolarMan* is a [MagicMirror](https://github.com/MichMich/MagicMirror) module for displaying the 
-current, power state of your PV installation. 
+current, power state of your PV installation if you system is a Deye Inverter and your data feed is supplied by SolarMan. It displays a table of instant usage values as well as cumulative for today and total for yesterday.
+
+The configuration does require that you periodically have to log into the SolarMan website and retrieve your JWT token and update the module config witht he token. There is a date display in the module telling you when the token will expire.
+
+TODO: change the logic to support users who have access to the SolarMan api as an API developer. You have to apply to them for access, which takes a while. But this is more convenient as the access to the API is then possible using API Keys.
 
 ### Example Screenshots
 
 Module Screenshot:
-
+![Module Example](screenshot.png?raw=true "Module Example")
 ---
 
 ### Dependencies
