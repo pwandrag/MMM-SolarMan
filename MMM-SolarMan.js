@@ -159,7 +159,7 @@ Module.register("MMM-SolarMan",{
 		row.innerHTML = `<td class='small regular bright'>Battery</td><td class='small light bright'>${data.instantaneous.battery} W</td><td class='normal small light align-right'>${data.today.batteryPowerToday} KW</td><td class='normal xsmall light align-right'>${data.yesterday.batteryPowerPrevDay} KW</td>`;
 		table.appendChild(row);
 		row = document.createElement("tr");
-		row.innerHTML = `<td class='small regular bright'>Grid</td><td class='small light bright'>${data.instantaneous.grid} W</td><td class='normal small light align-right'>${data.today.gridPowerToday} KW</td><td class='normal xsmall light'>${data.yesterday.gridPowerPrevDay} KW</td>`;
+		row.innerHTML = `<td class='small regular bright'>Grid</td><td class='small light bright'>${data.instantaneous.grid} W</td><td class='normal small light align-right'>${data.today.gridPowerToday} KW</td><td class='normal xsmall light align-right'>${data.yesterday.gridPowerPrevDay} KW</td>`;
 		table.appendChild(row);
 		row = document.createElement("tr");
 		row.innerHTML = `<td class='small regular bright'>Battery Status</td><td colspan=3 class='small light bright'>${data.instantaneous.batteryStatus}</td><td></td>`;
