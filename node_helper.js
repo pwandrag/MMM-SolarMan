@@ -32,17 +32,29 @@ let SolarMan = async function(opts,source) {
 	let year = today.getFullYear();
 	let month =today.getMonth()+1; // Months are zero-based, so we add 1
 	let day = today.getDate();
-	if (source === "system") {
-		dataUrl = `https://globalhome.solarmanpv.com/maintain-s/operating/system/${opts.stationID}`;
+	switch (source){
+		case "system": {
+				dataUrl = `https://globalhome.solarmanpv.com/maintain-s/operating/system/${opts.stationID}`;
+			}
+			break;
+		case "detail": {
+		 		dataUrl = `https://globalhome.solarmanpv.com/maintain-s/history/batteryPower/${opts.stationID}/stats/daily?year=${year}&month=${month}&day=${day}`;
+			}
+			break;
+		case "day": {
+			dataUrl = `https://globalhome.solarmanpv.com/maintain-s/history/power/analysis/${opts.stationID}/day?year=${year}&month=${month}&day=${day}`;
+			}
+			break;
+		case "prevDay": {
+			today.setDate(today.getDate() - 1); // Go back one day
+			year = today.getFullYear();
+			month = today.getMonth() + 1; // Months are zero-based, so we add 1
+			day = today.getDate();
+			dataUrl = `https://globalhome.solarmanpv.com/maintain-s/history/power/analysis/${opts.stationID}/day?year=${year}&month=${month}&day=${day}`;
+			}
+			break;
 	}
-	else if (source === "detail") {
-		 dataUrl = `https://globalhome.solarmanpv.com/maintain-s/history/batteryPower/${opts.stationID}/stats/daily?year=${year}&month=${month}&day=${day}`;
-		console.debug(`SolarMan dataUrl: ${dataUrl}`);
-	} else {
-		// daily data
-		dataUrl = `https://globalhome.solarmanpv.com/maintain-s/history/power/analysis/${opts.stationID}/day?year=${year}&month=${month}&day=${day}`;
-	}
-		
+
 	let response = await fetch(dataUrl,
 		{ headers: { 
 			Authorization: `Bearer ${token}`, 
@@ -55,59 +67,71 @@ let SolarMan = async function(opts,source) {
 		return null;
 	} 	 
 
+	switch(source) {
+		case "system": {
+			// split the token, take the second part, which is the actual token
+			let tokenParts = token.split('.');
+			let tokenPart = tokenParts[1];
+			// decode the token part
+			let decodedToken = Buffer.from(tokenPart, 'base64').toString('utf8');
+			// parse the decoded token as JSON
+			let parsedToken = JSON.parse(decodedToken);
+			// get expiration time from the token
+			let expirationTime = parsedToken.exp * 1000; // convert to milliseconds
 
-	if (source === "system") {
-		// split the token, take the second part, which is the actual token
-		let tokenParts = token.split('.');
-		let tokenPart = tokenParts[1];
-		// decode the token part
-		let decodedToken = Buffer.from(tokenPart, 'base64').toString('utf8');
-		// parse the decoded token as JSON
-		let parsedToken = JSON.parse(decodedToken);
-		// get expiration time from the token
-		let expirationTime = parsedToken.exp * 1000; // convert to milliseconds
-
-		let json = await response.json();
-		this.stats = json;
-		return {
-				status: this.stats.consumerWarningStatus,
-				load: this.stats.usePower,
-				generating: this.stats.generationPower,
-				battery: this.stats.dischargePower,
-				grid: this.stats.wirePower,
-				batteryStatus: this.stats.batteryStatus,
-				soc: this.stats.batterySoc,
-				tokenExpiration: expirationTime,
-			};
-	}
-	else if (source === "detail") {
-		let json = await response.json();
-		let records = json.records;
-		let chartData = [];
-		
-		records.forEach(row => {
-			chartData.push({   
-				dateTime : new Date((row.dateTime) * 1000),
-				timeLabel: new Date((row.dateTime) * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-				batteryPower: row.batteryPower,
-				generationPower: row.generationPower,
-				load: row.usePower,
-				soc: row.batterySoc,
-				grid: row.wirePower,
+			let json = await response.json();
+			this.stats = json;
+			return {
+					status: this.stats.consumerWarningStatus,
+					load: this.stats.usePower,
+					generating: this.stats.generationPower,
+					battery: this.stats.dischargePower,
+					grid: this.stats.wirePower,
+					batteryStatus: this.stats.batteryStatus,
+					soc: this.stats.batterySoc,
+					tokenExpiration: expirationTime,
+				};
+		}
+		case "detail": {
+			let json = await response.json();
+			let records = json.records;
+			let chartData = [];
+			
+			records.forEach(row => {
+				chartData.push({   
+					dateTime : new Date((row.dateTime) * 1000),
+					timeLabel: new Date((row.dateTime) * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+					batteryPower: row.batteryPower,
+					generationPower: row.generationPower,
+					load: row.usePower,
+					soc: row.batterySoc,
+					grid: row.wirePower,
+				});
 			});
-		});
-	
-		return chartData
-	} else {
-		let json = await response.json();
-		this.statsDay = json;
-	
-		return {
-				generationPowerToday: this.statsDay.gvForUse.toFixed(2),
-				loadToday: this.statsDay.useValue.toFixed(2),
-				batteryPowerToday: this.statsDay.uvFromDischarge.toFixed(2),
-				gridPowerToday: this.statsDay.uvFromBuy.toFixed(2)
-		};
+			return chartData;
+		}
+		case "day": {
+			let json = await response.json();
+			this.statsDay = json;
+		
+			return {
+					generationPowerToday: this.statsDay.gvForUse.toFixed(2),
+					loadToday: this.statsDay.useValue.toFixed(2),
+					batteryPowerToday: this.statsDay.uvFromDischarge.toFixed(2),
+					gridPowerToday: this.statsDay.uvFromBuy.toFixed(2)
+			};
+		}
+		case "prevDay": {
+			let json = await response.json();
+			this.statsPrevDay = json;
+
+			return {
+					generationPowerPrevDay: this.statsPrevDay.gvForUse.toFixed(2),
+					loadPrevDay: this.statsPrevDay.useValue.toFixed(2),
+					batteryPowerPrevDay: this.statsPrevDay.uvFromDischarge.toFixed(2),
+					gridPowerPrevDay: this.statsPrevDay.uvFromBuy.toFixed(2)
+			};
+		}
 	}
 };
 
@@ -146,12 +170,14 @@ module.exports = NodeHelper.create({
 		// Send all to script
 		let pv = await SolarMan(payload,"system");
 		let pvTotal = await SolarMan(payload,"day");
+		let pvTotalPrevDay = await SolarMan(payload,"prevDay");
 		
 		self.sendSocketNotification('SOLARMAN_DAY_SUMMARY', {
 			payload: payload,
 			data: {
 				instantaneous: pv,
-				today: pvTotal
+				today: pvTotal,
+				yesterday: pvTotalPrevDay
 			}
 		});
 	
