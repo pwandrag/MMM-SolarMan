@@ -15,7 +15,8 @@ Module.register("MMM-SolarMan",{
 		width: 500,
 		height: 400,
 		stationID: 62052809,	  
-		token : ''
+		token : '',
+		workmode2: null
 	},
 
   
@@ -302,6 +303,16 @@ Module.register("MMM-SolarMan",{
 						borderColor: 'rgb(75, 86, 236)',
 						backgroundColor: 'rgb(75, 86, 236,0.20)',
 						yAxisID: 'y'
+					},
+					{
+						type: 'line',
+						label: 'Soc Target',
+						data: data.map(row => row.socTarget),
+						fill: true,
+						borderWidth: 2,
+						borderColor: 'rgba(7, 247, 235, 1)',
+						backgroundColor: 'rgb(75, 86, 236,0.20)',
+						yAxisID: 'y2'
 					}         
 				]
 			}
