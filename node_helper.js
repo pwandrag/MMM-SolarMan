@@ -63,7 +63,7 @@ let SolarMan = async function(opts,source) {
 			}
 			break;
 	}
-
+	//console.log(`Fetching data from ${dataUrl}`);
 	let response = await fetch(dataUrl,
 		{ headers: { 
 			Authorization: `Bearer ${token}`, 
@@ -72,7 +72,7 @@ let SolarMan = async function(opts,source) {
 	);
 
 	if (!response.ok) {
-		console.error(`Error url:${dataUrl} status:${response.statusText} body: ${response.text()}`);
+		console.error(`Error url:${dataUrl} status:${response.statusText} body: ${await response.text()}`);
 		return null;
 	} 	 
 
@@ -118,7 +118,7 @@ let SolarMan = async function(opts,source) {
 
 			records.forEach(row => {
 				let dateStamp = new Date((row.dateTime) * 1000);
-				let socTargetForHour = getSocTarget(dateStamp.getHours(),opts.deviceSetup.workmode2);
+				//let socTargetForHour = getSocTarget(dateStamp.getHours(),opts.deviceSetup.workmode2);
 				chartData.push({   
 					dateTime : dateStamp,
 					timeLabel: dateStamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
@@ -127,7 +127,7 @@ let SolarMan = async function(opts,source) {
 					load: row.usePower,
 					soc: row.batterySoc,
 					grid: row.wirePower,
-					socTarget: socTargetForHour
+					//socTarget: socTargetForHour
 				});
 			});
 			return chartData;
@@ -135,23 +135,23 @@ let SolarMan = async function(opts,source) {
 		case "day": {
 			let json = await response.json();
 			this.statsDay = json;
-		
+			//console.log("Stats Day:", this.statsDay);
 			return {
-					generationPowerToday: this.statsDay.gvForUse.toFixed(2),
-					loadToday: this.statsDay.useValue.toFixed(2),
-					batteryPowerToday: this.statsDay.uvFromDischarge.toFixed(2),
-					gridPowerToday: this.statsDay.uvFromBuy.toFixed(2)
+					generationPowerToday: (this.statsDay.gvForUse===null ? 0 : this.statsDay.gvForUse.toFixed(2)),
+					loadToday: (this.statsDay.useValue===null ? 0 : this.statsDay.useValue.toFixed(2)),
+					batteryPowerToday: (this.statsDay.uvFromDischarge===null ? 0 : this.statsDay.uvFromDischarge.toFixed(2)),
+					gridPowerToday: (this.statsDay.uvFromBuy===null ? 0 : this.statsDay.uvFromBuy.toFixed(2))
 			};
 		}
 		case "prevDay": {
 			let json = await response.json();
 			this.statsPrevDay = json;
-
+			//console.log("Stats Prev Day:", this.statsPrevDay);
 			return {
-					generationPowerPrevDay: this.statsPrevDay.gvForUse.toFixed(2),
-					loadPrevDay: this.statsPrevDay.useValue.toFixed(2),
-					batteryPowerPrevDay: this.statsPrevDay.uvFromDischarge.toFixed(2),
-					gridPowerPrevDay: this.statsPrevDay.uvFromBuy.toFixed(2)
+					generationPowerPrevDay: (this.statsPrevDay.gvForUse===null ? 0 : this.statsPrevDay.gvForUse.toFixed(2)),
+					loadPrevDay: (this.statsPrevDay.useValue===null ? 0 : this.statsPrevDay.useValue.toFixed(2)),
+					batteryPowerPrevDay: (this.statsPrevDay.uvFromDischarge===null ? 0 : this.statsPrevDay.uvFromDischarge.toFixed(2)),
+					gridPowerPrevDay: (this.statsPrevDay.uvFromBuy===null ? 0 : this.statsPrevDay.uvFromBuy.toFixed(2))
 			};
 		}
 	}
@@ -208,6 +208,10 @@ module.exports = NodeHelper.create({
 	initStartup: async function (payload) {
 		var self = this;
 
+		return {
+			workmode2: []
+		}
+
 		//devices returns all inverters for the location id
 		let devices = await SolarMan({stationID: payload.stationID, token: payload.token},"deviceList");
 		let deviceId = devices[0].deviceId;
@@ -216,7 +220,14 @@ module.exports = NodeHelper.create({
 		let deviceConfig = await SolarMan({stationID: payload.stationID, token: payload.token, deviceID: deviceId},"deviceConfig");
 
 		//workmodes tell the inverter wat target SOC (State of Charge) to get the inverter to at a given time of the day
-		let workMode2Setup = JSON.parse(deviceConfig.cnjgzms2.extendWeb);
+		let workMode2Setup = null;
+		if (deviceConfig.cnjgzms2 === undefined) {
+			console.log(deviceConfig.cnjgzms1.extendWeb);
+			workMode2Setup = JSON.parse(deviceConfig.cnjgzms1.extendWeb);
+		} else{
+			console.log(deviceConfig.cnjgzms2.extendWeb);
+			workMode2Setup = JSON.parse(deviceConfig.cnjgzms2.extendWeb);
+		}
 		workMode2Setup = workMode2Setup.inputParam;
 
 		let workmode2 =[];
