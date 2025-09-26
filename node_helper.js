@@ -39,7 +39,7 @@ let SolarMan = async function(opts,source) {
 			}
 			break;
 		case "deviceConfig": {
-				dataUrl = `https://globaldc-pro.solarmanpv.com/order-s/order/action/last/batchParam/group?deviceId=${opts.deviceID}`;
+				dataUrl = `https://globaldc-pro.solarmanpv.com/order-s/order/action/${opts.deviceID}`;
 			}
 			break;
 		case "system": {
