@@ -100,6 +100,10 @@ let SolarMan = async function(opts,source) {
 
 			let json = await response.json();
 			this.stats = json;
+			var gridStatus = "BREAK";
+			if (this.stats.gridStatus != null){
+				gridStatus = this.stats.gridStatus;
+			}
 			return {
 					status: this.stats.consumerWarningStatus,
 					load: this.stats.usePower,
@@ -109,6 +113,7 @@ let SolarMan = async function(opts,source) {
 					batteryStatus: this.stats.batteryStatus,
 					soc: this.stats.batterySoc,
 					tokenExpiration: expirationTime,
+					gridStatus: gridStatus
 				};
 		}
 		case "detail": {
