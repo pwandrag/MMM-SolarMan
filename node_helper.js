@@ -75,8 +75,9 @@ let SolarMan = async function(opts,source) {
 			Authorization: `Bearer ${token}`, 
 			UserAgent:'MagicMirror',
 			method: payload ? 'POST' : 'GET',
-			body: payload ? JSON.stringify(payload) : null
-		 } 
+			'Content-Type': 'application/json'
+		}, 
+		body: payload ? JSON.stringify(payload) : null
 		}, 
 	);
 
