@@ -148,7 +148,7 @@ Module.register("MMM-SolarMan",{
 		table.id = "solarmanStatsTable";
 
 		let row = document.createElement("tr");
-		row.innerHTML = `<td class='small regular bright'>System</td><td class='small light bright'>${data.instantaneous.status}</td><td class='small regular bright'>Grid:<span class='small light bright'>${data.instantaneous.gridStatus}</span></td><td><span class='normal xsmall' style='float:right'>Token:${new Date(data.instantaneous.tokenExpiration).toLocaleDateString('en-us',[{day:'numeric'},{month:'short'},{year:'none'}])}</span></td>`;
+		row.innerHTML = `<td class='small regular bright'>System</td><td class='small light bright'>${data.instantaneous.status}</td><td class='small regular bright'>Grid:<span class='small light bright align-right'">${data.instantaneous.gridStatus}</span></td><td><span class='normal xsmall' style='float:right'>Token:${new Date(data.instantaneous.tokenExpiration).toLocaleDateString('en-us',[{day:'numeric'},{month:'short'},{year:'none'}])}</span></td>`;
 		table.appendChild(row);
 		row = document.createElement("tr");
 		row.innerHTML = `<td class='small regular bright'>Load</td><td class='small light bright'>${data.instantaneous.load} W</td><td class='normal small light align-right'>${data.today.loadToday} KW</td><td class='normal xsmall light align-right'>${data.yesterday.loadPrevDay} KW</td>`;
