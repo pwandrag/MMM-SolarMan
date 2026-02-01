@@ -99,6 +99,7 @@ let SolarMan = async function(opts,source) {
 			// Handle device status response
 			let json = await response.json();
 			var gridstate = json.paramCategoryList.find(category => category.tag === "status");
+			console.log("Device Status:", gridstate);
 			if (gridstate) {
 				return {
 					gridStatus: gridstate.fieldList[0].value.toUpperCase()
@@ -286,7 +287,16 @@ module.exports = NodeHelper.create({
 		let pv = await SolarMan(payload,"system");
 		let pvTotal = await SolarMan(payload,"day");
 		let pvTotalPrevDay = await SolarMan(payload,"prevDay");
-		let deviceStatus = await SolarMan(payload,"deviceStatus");
+
+		let deviceStatus = { gridStatus: "UNKNOWN" };
+		try{
+			let devices = await SolarMan({stationID: payload.stationID, token: payload.token},"deviceList");
+			let deviceId = devices[0].deviceId;
+			payload.deviceID = deviceId;
+			deviceStatus = await SolarMan(payload,"deviceStatus");
+		} catch (error) {
+			console.error("Error fetching device status: ", error);
+	}
 
 		// Merge grid status into instantaneous data
 		pv.gridStatus = deviceStatus.gridStatus;
