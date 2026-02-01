@@ -43,10 +43,11 @@ let SolarMan = async function(opts,source) {
 				dataUrl = `https://globaldc-pro.solarmanpv.com/order-s/order/action/${opts.deviceID}`;
 			}
 			break;
-			case "deviceStatus": {
+		case "deviceStatus": {
 				dataUrl = `https://home.solarmanpv.com/device-s/device/v3/detail`;
 				payload = { deviceId: opts.deviceID, siteId: opts.stationID, language: "en",needRealTimeDataFlag:true };
 			}
+			break;
 		case "system": {
 				dataUrl = `https://globalhome.solarmanpv.com/maintain-s/operating/system/${opts.stationID}`;
 			}
@@ -286,9 +287,9 @@ module.exports = NodeHelper.create({
 			payload.deviceID = deviceId;
 			let deviceStatusRemote = await SolarMan(payload,"deviceStatus");
 	
-			console.log("Device Status JSON:", deviceStatusRemote);
+			console.debug("Device Status JSON:", deviceStatusRemote.stringify());
 			var gridstate = deviceStatusRemote.paramCategoryList.find(category => category.tag === "status");
-			console.log("Device Status:", gridstate);
+			console.log("Device Status:", gridstate.stringify());
 			if (gridstate) {
 				deviceStatus.gridStatus = gridstate.fieldList[0].value.toUpperCase();
 			}
