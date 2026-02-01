@@ -33,6 +33,7 @@ let SolarMan = async function(opts,source) {
 	let year = today.getFullYear();
 	let month =today.getMonth()+1; // Months are zero-based, so we add 1
 	let day = today.getDate();
+	let payload = null;
 	switch (source){
 		case "deviceList":{
 				dataUrl = `https://globalhome.solarmanpv.com/maintain-s/fast/device/${opts.stationID}/device-list?deviceType=INVERTER`;
@@ -42,6 +43,10 @@ let SolarMan = async function(opts,source) {
 				dataUrl = `https://globaldc-pro.solarmanpv.com/order-s/order/action/${opts.deviceID}`;
 			}
 			break;
+			case "deviceStatus": {
+				dataUrl = `https://home.solarmanpv.com/device-s/device/v3/detail`;
+				payload = { deviceId: opts.deviceID, siteId: opts.stationID, language: "en",needRealTimeDataFlag:true };
+			}
 		case "system": {
 				dataUrl = `https://globalhome.solarmanpv.com/maintain-s/operating/system/${opts.stationID}`;
 			}
@@ -67,7 +72,10 @@ let SolarMan = async function(opts,source) {
 	let response = await fetch(dataUrl,
 		{ headers: { 
 			Authorization: `Bearer ${token}`, 
-			UserAgent:'MagicMirror' } 
+			UserAgent:'MagicMirror',
+			method: payload ? 'POST' : 'GET',
+			body: payload ? JSON.stringify(payload) : null
+		 } 
 		}, 
 	);
 
@@ -87,6 +95,19 @@ let SolarMan = async function(opts,source) {
 			let json = await response.json();
 			return json;
 		}
+		case "deviceStatus": {
+			// Handle device status response
+			let json = await response.json();
+			var gridstate = json.paramCategoryList.find(category => category.tag === "status");
+			if (gridstate) {
+				return {
+					gridStatus: gridstate.fieldList[0].value.toUpperCase()
+				};
+			}
+			return {
+				gridStatus: "UNKNOWN"
+			};
+		}
 		case "system": {
 			// split the token, take the second part, which is the actual token
 			let tokenParts = token.split('.');
@@ -100,10 +121,6 @@ let SolarMan = async function(opts,source) {
 
 			let json = await response.json();
 			this.stats = json;
-			var gridStatus = "BREAK";
-			if (this.stats.gridStatus != null){
-				gridStatus = this.stats.gridStatus;
-			}
 			return {
 					status: this.stats.consumerWarningStatus,
 					load: this.stats.usePower,
@@ -113,7 +130,6 @@ let SolarMan = async function(opts,source) {
 					batteryStatus: this.stats.batteryStatus,
 					soc: this.stats.batterySoc,
 					tokenExpiration: expirationTime,
-					gridStatus: gridStatus
 				};
 		}
 		case "detail": {
@@ -270,6 +286,10 @@ module.exports = NodeHelper.create({
 		let pv = await SolarMan(payload,"system");
 		let pvTotal = await SolarMan(payload,"day");
 		let pvTotalPrevDay = await SolarMan(payload,"prevDay");
+		let deviceStatus = await SolarMan(payload,"deviceStatus");
+
+		// Merge grid status into instantaneous data
+		pv.gridStatus = deviceStatus.gridStatus;
 		
 		self.sendSocketNotification('SOLARMAN_DAY_SUMMARY', {
 			payload: payload,
