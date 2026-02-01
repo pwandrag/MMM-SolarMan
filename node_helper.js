@@ -97,8 +97,6 @@ let SolarMan = async function(opts,source) {
 		return null;
 	} 	 
 
-	console.info(`url:${dataUrl} status:${response.statusText} body: ${await response.text()}`);
-
 	switch(source) {
 		case "deviceList": {
 			// Handle device list response
