@@ -37,10 +37,12 @@ let SolarMan = async function(opts,source) {
 	switch (source){
 		case "deviceList":{
 				dataUrl = `https://globalhome.solarmanpv.com/maintain-s/fast/device/${opts.stationID}/device-list?deviceType=INVERTER`;
+				payload = null;
 			}
 			break;
 		case "deviceConfig": {
 				dataUrl = `https://globaldc-pro.solarmanpv.com/order-s/order/action/${opts.deviceID}`;
+				payload = null;
 			}
 			break;
 		case "deviceStatus": {
@@ -50,14 +52,17 @@ let SolarMan = async function(opts,source) {
 			break;
 		case "system": {
 				dataUrl = `https://globalhome.solarmanpv.com/maintain-s/operating/system/${opts.stationID}`;
+				payload = null;
 			}
 			break;
 		case "detail": {
 		 		dataUrl = `https://globalhome.solarmanpv.com/maintain-s/history/batteryPower/${opts.stationID}/stats/daily?year=${year}&month=${month}&day=${day}`;
+				payload = null;
 			}
 			break;
 		case "day": {
 			dataUrl = `https://globalhome.solarmanpv.com/maintain-s/history/power/analysis/${opts.stationID}/day?year=${year}&month=${month}&day=${day}`;
+			payload = null;
 			}
 			break;
 		case "prevDay": {
@@ -66,6 +71,7 @@ let SolarMan = async function(opts,source) {
 			month = today.getMonth() + 1; // Months are zero-based, so we add 1
 			day = today.getDate();
 			dataUrl = `https://globalhome.solarmanpv.com/maintain-s/history/power/analysis/${opts.stationID}/day?year=${year}&month=${month}&day=${day}`;
+			payload = null;
 			}
 			break;
 	}
