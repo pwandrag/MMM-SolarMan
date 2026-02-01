@@ -73,13 +73,14 @@ let SolarMan = async function(opts,source) {
 	let response = null;
 	if (payload) {
 		response = await fetch(dataUrl,
-		{ headers: { 
-			Authorization: `Bearer ${token}`, 
-			UserAgent:'MagicMirror',
-			method: 'POST',
-			'Content-Type': 'application/json'
-		}, 
-		body: JSON.stringify(payload)
+		{ 
+			headers: { 
+				Authorization: `Bearer ${token}`, 
+				UserAgent:'MagicMirror',
+				method: 'POST',
+				'Content-Type': 'application/json'
+				}, 
+			body: JSON.stringify(payload)
 		}
 	);
 	}
