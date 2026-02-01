@@ -281,20 +281,19 @@ module.exports = NodeHelper.create({
 		let pvTotalPrevDay = await SolarMan(payload,"prevDay");
 
 		let deviceStatus = { gridStatus: "UNKNOWN" };
+		let deviceStatusRemote = null;
 		try{
 			let devices = await SolarMan({stationID: payload.stationID, token: payload.token},"deviceList");
 			let deviceId = devices[0].deviceId;
 			payload.deviceID = deviceId;
-			let deviceStatusRemote = await SolarMan(payload,"deviceStatus");
+			deviceStatusRemote = await SolarMan(payload,"deviceStatus");
 	
-			console.debug("Device Status JSON:", deviceStatusRemote.stringify());
 			var gridstate = deviceStatusRemote.paramCategoryList.find(category => category.tag === "status");
-			console.log("Device Status:", gridstate.stringify());
 			if (gridstate) {
 				deviceStatus.gridStatus = gridstate.fieldList[0].value.toUpperCase();
 			}
 		} catch (error) {
-			console.error("Error fetching device status: ", error);
+			console.error("Error fetching device status: ", error,deviceStatusRemote);
 		}
 
 		// Merge grid status into instantaneous data
