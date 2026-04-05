@@ -60,6 +60,16 @@ let SolarMan = async function(opts,source) {
 				payload = null;
 			}
 			break;
+		case "prevDetail": {
+				let prevDate = new Date();
+				prevDate.setDate(prevDate.getDate() - 1);
+				let prevYear = prevDate.getFullYear();
+				let prevMonth = prevDate.getMonth() + 1;
+				let prevDay = prevDate.getDate();
+				dataUrl = `https://globalhome.solarmanpv.com/maintain-s/history/batteryPower/${opts.stationID}/stats/daily?year=${prevYear}&month=${prevMonth}&day=${prevDay}`;
+				payload = null;
+			}
+			break;
 		case "day": {
 			dataUrl = `https://globalhome.solarmanpv.com/maintain-s/history/power/analysis/${opts.stationID}/day?year=${year}&month=${month}&day=${day}`;
 			payload = null;
@@ -142,15 +152,15 @@ let SolarMan = async function(opts,source) {
 					tokenExpiration: expirationTime,
 				};
 		}
-		case "detail": {
+		case "detail":
+		case "prevDetail": {
 			let json = await response.json();
 			let records = json.records;
 			let chartData = [];
 
 			records.forEach(row => {
 				let dateStamp = new Date((row.dateTime) * 1000);
-				//let socTargetForHour = getSocTarget(dateStamp.getHours(),opts.deviceSetup.workmode2);
-				chartData.push({   
+				chartData.push({
 					dateTime : dateStamp,
 					timeLabel: dateStamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
 					batteryPower: row.batteryPower,
@@ -158,7 +168,6 @@ let SolarMan = async function(opts,source) {
 					load: row.usePower,
 					soc: row.batterySoc,
 					grid: row.wirePower,
-					//socTarget: socTargetForHour
 				});
 			});
 			return chartData;
@@ -325,11 +334,18 @@ module.exports = NodeHelper.create({
 			}
 		});
 	
-		let pv2 = await SolarMan(payload,"detail");
+		let pvDetailToday = await SolarMan(payload, "detail");
+		let pvDetailYesterday = await SolarMan(payload, "prevDetail");
+
+		// Build a rolling 24h window: yesterday's records from the current hour onward,
+		// followed by all of today's records.
+		const currentHour = new Date().getHours();
+		const yesterdaySlice = (pvDetailYesterday || []).filter(r => r.dateTime.getHours() >= currentHour);
+		const rolling24h = [...yesterdaySlice, ...(pvDetailToday || [])];
 
 		self.sendSocketNotification('SOLARMAN_DAY_DETAIL', {
 			payload: payload,
-			data: pv2
+			data: rolling24h
 		});
 		return;
 	},
